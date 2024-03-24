@@ -3,7 +3,7 @@
 
 githab project name 
 
-npm create vite@latest router-job-project -- --template react
+npm create vite@latest route-five-hours-project -- --template react
 
 cd ...
 
