@@ -12,7 +12,7 @@ npm install -D tailwindcss postcss autoprefixer
 npx tailwindcss init -p
 npm i -D daisyui@latest
 npm install --save prop-types
-npm install react-hot-toast
+npm install --save react-toastify
 npm install react-icons --save
 
 content: [
@@ -82,13 +82,14 @@ utility
 Error.jsx
 
 -----------------------------------------------------------
-import toast, { Toaster } from 'react-hot-toast';
+import React from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-toast('Successfull');
+toast("Wow so easy !");
 
 
-<Toaster />
-
+<ToastContainer />
 --------------------------------------------------------------------------
 
 
