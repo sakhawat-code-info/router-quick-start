@@ -14,6 +14,7 @@ npm i -D daisyui@latest
 npm install --save prop-types
 npm install --save react-toastify
 npm install react-icons --save
+npm install sweetalert2
 
 content: [
     "./index.html",
