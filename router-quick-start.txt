@@ -128,7 +128,24 @@ app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
 
-
+-----------------------------------------------------------------
+    // Password Validation
+    if (
+      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/.test(
+        password
+      )
+    ) {
+    
+      toast.error(
+        "password must be have at least 6 characters,a capital & spacial letter,one number"
+      )
+      return;
+    }
+    // Email Validation
+    if (!/^\w+([.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+      toast.error("Please enter a valid email");
+      return;
+    }
 
 
 
