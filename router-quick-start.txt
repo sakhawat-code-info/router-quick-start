@@ -150,3 +150,172 @@ app.listen(port, () => {
 
 
 
+
+
+
+Sajib Note:
+Server SetUp:
+ব্যাকেন্ড আহমরি কিছু না। প্রথমে express, cors,npm, Mongodb এসব ইনস্টল করতে হবে। তারপরে express এর কিছু require কোর্ড লিখতে হয়।
+const express = require('express')
+এখানে express কে রিকুয়ার করে কল করা হয়ছে।
+const cors = require('cors')
+একই ভাবে করস কে কল করা হয়ছে।
+const app = express()
+এবার app ভেরিয়েবল এ express কে স্টোর করা কয়েছে
+const port = process.env.PORT || 5000
+এখানে port নামক ভেরিয়েবল এ আপনি কত সিরিয়ালে লোকালহহোস্টে সার্ভার চালাতে চাইছেন সেটা ডিক্লিয়ার করা হয়েছে।
+এরপরে
+app.use(express.json())
+app.use(cors())
+
+এবার চালানোর জন্য কোর্ড করি আসেন।
+app.get('/', async (req, res) =>{
+res.send('start server')
+}
+app.listen(port, ()=>{
+console.log('server running')
+}
+এটা ব্যাসিক সার্ভার
+
+POST:
+..............................
+যখন কোনো ডাটা আপনি ডাটাবেজে পোস্ট করতে চাইবেন।
+তখন আপনাকে আগে
+ডাটাবেজে'র collection কে গেট করতে হবে
+যেমন
+const usersCollection = await client.db('usersDB').collection('users')
+আমাদের ডাটাবেজের কালেকশন গেট করা শেষ।
+এবার আসি পোস্ট method এ
+কোনো ডাটা ডাটাবেজে পাঠানো'র জন্য app.post লিখতে হয়
+যেমন
+app.post('/users', async (req,res)=>{
+const query = req.body
+const result = await usersCollection.insertOne(query)
+res.send(result)
+}
+এখানে আমরা query এর মাধ্যমে ক্লাইন্ট সাইটে'র বডি থেকে ডাটা গুলো req করে বের করে একটি ভেরিয়েবল এ ডিক্লিয়ার করছি। result নামক একটি ভেরিয়েবল এ await দিছি কারণ আমরা async ফাংশন ইউজ করছি। 
+এবার const result = await usersCollection.InsertOne(query)
+এখনে আমরা যে কালেকশনে ডাটা পাঠাবো তাকে কল করছি আমাদের কালেকশনের নাম ছিল usersCollection। এবার ডাটা পাঠানোর জন্য insertOne  ব্যবহার করছি। এখানে আমরা একটা ডাটা পাঠাবো তাই insertOne দিছি। যখন অনেকগুলো ডাটা পাঠাবো তখন insertMany() দিবো।
+এবার insertOne এর ভীতরে body ডাটা মানে query কে পাঠায় দিছি। পরিশেষে result কে সেন্ড করার পালা।
+তাই res.send(result)
+ব্যাচ ব্যাকেন্ডের কাজ শেষ ডাটা পাঠানো'র
+
+GET:
+.......................
+
+ডাটা ডাটাবেজে পাঠানো'র পরে
+আপনার মন আকুপাকু করবে ডাটা গুলো ইউ আই তে দেখানোর জন্য। আর নয় টেনশন এখনি তার আলোচনা হবে। বাচ্চারা মনোযোগ দিয়ে পড়া হালকা করে শুরু করো।
+আমরা যখন কোনো কিছু পেতে চাই ডাটাবেজ থেকে তখন get শব্দটি'র কথা আগে মাথায় আসে।
+এখন গেট করার জন্য ও কিন্তু আপনার collection টি ডিক্লিয়ার করা থাকতে হবে। 
+যদি আপনি post method রিলেটেড আর্টিকেল পড়ে থাকেন তাহলে collection এর বিষয়ে নিশ্চয় বুঝতে পেরেছেন।
+তাহলে এবার আসি
+app.get('/users', async (req,res) =>{
+const result = await usersCollection.find().toArray()
+res.send(result)
+}
+এখানে আমরা রেজাল্ড নামক একটি ভেরিয়েবল নিছি সেখানে await করছি এবার ডিক্লিয়ার করা collection কে বসায়ছি তারপরে find() বসায়ছি এজন্য যে আমরা এই collection  এর আন্ডারে থাকা সব ডাটা গুলো পেতে চাই তাই find()। যদি আমার একটা ডাটা পেতে চাই তাহলে findOne() ইউজ করবো। তারপরে আসি toArray()
+এখন ক্লাইন্ট সাইড থেকে যখন ডাটা আমরা পাঠায় ছিলাম নিশ্চয় stringify করে পাঠায় ছিলাম। এখন ডাটা যখন ক্লাইন্ট কে দিবো তখন তো আর এভাবে দেওয়া যাবে না। তার জন্য toArray() এর মাধ্যমে ডাটা গুলো কে  array আকারে সেন্ড করে দিছি।
+তারপরে  সেই পুরানো কাজ
+res.send(result)
+ডাটা পাঠানো শেষ।
+
+GET:
+.........................
+
+
+খুব তো ডাটা পাটানো হলো, রিড করা হলো
+এবার তো মন চাইতেই পারে ঠুস করে ডাটা ডিলেট করতে?
+চলুন শুরু করি।
+অবশ্যই ডিলেপ অপরেশন চালানোর জন্য আপনার ডাটাবেজের কালেকশন ডিক্লিয়ার থাকতে হবে।
+যেমন
+const usersCollection = await client.db('usersDB').collection('users')
+এখন ডিলেট করার জন্য delete method লাগবে নিশ্চয়।
+ app.delete('/users/:id', async (req,res)=>{
+const id = req.params.id
+const filter = { _id: new ObjectId(id)}
+const result = await usersCollection.deleteOne(id)
+res.send(result)
+}
+ডাটাবেজ থেকে ডাটা যদি ডিলেট করতে হয় তাহলে নিশ্চয়  common কিছু কে ধরতে হবে। এখন ডাটাবেজে id কমন দেখা যায়। সব ডাটাতে ই থাকে। তাই 'users/:id' এভাবে লিখছি
+এখন id তো গেট করতে হবে তার জন্য
+আমরা id নামে ভেরিয়েবল নিছি
+const id= req.params.id
+আইডি কে req করে আইডি গেট করছি।
+এবার ডাটাবেজে তো আর id এভাবে লেখা থাকে না। ডাটাবেজে  _id থাকে। তার জন্য filter নামক ভেরিয়েবল নিছি
+const filter = {}
+filter = অবজেক্ট নিছি।
+const filter={_id}
+ডাটাবেজে বিদ্যমান আইডি নিছি
+consr filter={_id: new ObjectId(id)}
+ডাটাবেজে আইডি টা অবজেক্ট আকারে থাকে তাই ObjectId নিছি আর new  key word না দিলে ObjectId কাজ করে না।
+কেন এটা গুগলে সার্চ মারেন।
+আইডি গেট করা শেষ।
+এবার result নামে ভেরিয়েবল নিছি
+const result = await usersCollection.deleteOne(id)
+কালেকশন কে বসায়ছি। তারপরে একটা ডাটা ডিলেট করতে চাই তার জন্য deleteOne() মারছি।
+যদি অনেকগুলো ডাটা ডিলেট করতে চাই তার জন্য deleteMany() ব্যবহার করতে হয়।
+deleteOne এর ভীতরে id পাস করে দিছি।
+তারপরে res.send(result)
+ব্যাচ ডাটা ডিলেট অপরেশন খতম।
+
+PUT:
+.........................
+কি বাচ্চারা ঘুমায় গিছো না কি?
+দ্রুত উঠে পড়ো এবার চলে এসেছে
+তোমাগো update খালু মানে PUT অপরেশন।
+ডাটাবেজে বিদ্যমান ডাটা আপডেট করার জন্য আমরা  put ব্যবহার করে থাকি। ছোট খাটো আপডেটে'র জন্য Patch অপরেশন চালানো হয়ে থাকে। 
+চলো শুরু করা যাক!
+অবশ্যই যে কালেকশন কে আমরা আপডেট করতে চাই সেটা ডিক্লিয়ার থাকতে হবে। 
+যেমন
+const usersCollection = await client.db('usersDB').collection('users')
+এবার চলো আপডেট মারি মানে    পুট রে গিট্টু লাগায়ে আপডেট করি।
+app.put('/users/:id', async (req,res)=>{
+const id = req.params.id
+const filter = { _id: new ObjectId(id)}
+const options = { upsert: true}
+const updateUsers = req.body
+const update = {
+$set: {
+name: updateUsers.name
+email: updateUsers.email
+}
+}
+const result = await usersCollection.updateOne(filter, update, options)
+res.send(result)
+}
+এখানে পূর্বের ন্যায় আইডি গেট করা হয়েছে ডাটাবেজ থেকে। আইডি রিলেটেড নিশ্চয় ডিলেট অপরেশন পোস্টে পড়েছেন তাই এখানে আলোচনা করছি না।
+এরপরে আসুন 
+const options = { upsert: true}
+যখন আপনি কোনো ডাটা থাকলে আপডেট করা এবং না থাকলে এটি সন্নিবেশ করার সমন্বয় চান তখন এই upsert লাগে। এখানে upsert কে আমরা  options নামকে ভেরিয়েবল এ ডিক্লিয়ার করে রাখছি। তারপরে const UpdateUsers = req.body 
+এর মাধ্যমে ইউজারের ইনপুট করা ডাটা গুলো নিছি।
+এবার আসি update এর বিষয়ে
+এখানে আপনি const update ={} 
+একটি অবজেক্ট নিবেন তারপরে Mongodb এর রিজার্ভ কিওয়ার্ড $set:{}
+নিবেন।
+ $set {
+name: updateUsers.name,
+email: updateUsers.email
+}
+এখানে আপনি যে ডাটা গুলো আপডেট করতে চান সেগুলো বসাতে হবে।
+এরপরে 
+const result = await usersCollection.updateOne(filter,update,options)
+এখানে usersCollection এর ভীতরে আমরা একটা ডাটা আপডেট করতে চাইছি যার কারণে  uodateOne লিখছি।
+এবং uodateOne এর ভিতরে id কে পাঠানো হয়েছে যা filter নামক ভেরিয়েবল এ স্টোর ছিলো। তারপরে যে ডাটা গুলো update করতে চাই সেগুলো update এর ভীতরে সুন্দর করে সাজিয়ে লেখা ছিলো সেটা পাঠানো হয়েছে ৩ নম্বারে upsert কে পাঠানো হয়েছে যা options নামক ভেরিয়েবল এ স্টোর ছিলো।
+তারপরে res.send(result)
+ব্যাচ আপডেটের কাজ শেষ
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
